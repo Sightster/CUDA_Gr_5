@@ -6,8 +6,8 @@ cmake_minimum_required (VERSION 3.8)
 project (BLAS LANGUAGES CXX CUDA)
 
 if(NOT DEFINED CMAKE_CUDA_STANDARD)
-    #set(CMAKE_CUDA_STANDARD 11)
-    #set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+    set(CMAKE_CUDA_STANDARD 11)
+    set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 endif()
 
 # prevent for in-source building
@@ -18,9 +18,12 @@ endif()
 #endif ()
 
 set(PROJECT_LINK_DIRECTORY ${PROJECT_SOURCE_DIR})
-include_directories(${PROJECT_SOURCE_DIR}/include)
+set(PATH_TO_CUDA_SAMPLES "C:\\ProgramData\\NVIDIA Corporation\\CUDA Samples\\v10.1\\common\\inc")
+set(PATH_TO_CUBLAS "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v10.1\\include")
 
-file(GLOB SOURCES "${PROJECT_SOURCE_DIR}/src/*.c*")
+include_directories(${PROJECT_SOURCE_DIR}/include ${PATH_TO_CUDA_SAMPLES} ${PATH_TO_CUBLAS})
+
+file(GLOB SOURCES ${PROJECT_SOURCE_DIR}/src/*.c*)
 
 
 # Add source to this project's executable.

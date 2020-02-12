@@ -4,19 +4,27 @@
 #include "gpuBLAS.h"
 #include "VWorkspace.h"
 #include "MWorkspace.h"
+#include "Gpu.h"
 
 #include <iostream>
 
 class vWorkspace;
 class mWorkspace;
+class Gpu;
 
 class Manager {
+	
+	//friend void addGpu();
 private:
 	vWorkspace* _vectors;
 	mWorkspace* _matrices;
+	Gpu* _GPU;
+
 	bool _cpu;
 	bool _gpu;
 	bool _timeMeasure;
+	int _gridSize;
+	int _blockSize;
 
 public:
 
@@ -30,6 +38,7 @@ public:
 	vWorkspace* vectors() const;
 	mWorkspace* matrices() const;
 
+	void changeSizes();
 	void switchModeCpu();
 	void switchModeGpu();
 	void switchModeTime();

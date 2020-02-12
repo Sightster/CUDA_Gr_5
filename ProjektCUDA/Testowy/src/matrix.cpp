@@ -65,16 +65,16 @@ Matrix Matrix::operator * (const Matrix& m2) const {
 		Matrix result(0, 0);
 		return result;
 	}
-	Matrix result(_col, m2._row);
+	Matrix result(_row, m2._col);
 	int sum;
-	for (int i = 0; i < _col; ++i)
-		for (int j = 0; j < m2._row; ++j) {
+	for (int i = 0; i < _row; ++i)
+		for (int j = 0; j < m2._col; ++j) {
 			sum = 0;
-			for (int k = 0; k < _row; ++k)
+			for (int k = 0; k < _col; ++k)
 			{
-				sum += _ptr[i * _row + k] * m2._ptr[k * _col + j];
+				sum += _ptr[i * _col + k] * m2._ptr[k * m2._col + j];
 			}
-			(result.getPtr())[i * _col + j] = sum;
+			(result.getPtr())[i * m2._col + j] = sum;
 		}
 	return result;
 }

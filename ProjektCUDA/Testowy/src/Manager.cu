@@ -55,7 +55,7 @@ void Manager::confMenu() {
     do {
         std::cout << "\n***Configuration Menu***\n";
         int choice;
-        std::cout << "0)Switch Mode GPU    1)Switch Mode CPU     2)Switch Time Measure Mode     3)Show      4)Back\n";
+        std::cout << "0)Switch Mode GPU    1)Switch Mode CPU     2)Switch Time Measure Mode     3)Show     4)Set grid/blocks sizes      5)Back\n";
             
         std::cin >> choice;
         while (std::cin.fail()) {
@@ -83,6 +83,9 @@ void Manager::confMenu() {
             break;
 
         case 4:
+            _GPU->changeSizes();
+            break;
+        case 5:
             stay = false;
             break;
 
@@ -95,6 +98,8 @@ void Manager::confMenu() {
 
     } while (stay);
 }
+
+
 
 void Manager::switchModeCpu() {
     _cpu ^= true;
@@ -288,7 +293,7 @@ void Manager::calculateMatricesMenu() {
     do {
         std::cout << "\n***Calculate Menu Matrices***\n";
         int choice;
-        std::cout << "0)Compare    1)Add     2)Substract     3)Multiplication     4)Invers     5)Show     6)Back\n";
+        std::cout << "0)Compare    1)Add     2)Substract     3)Multiplication     4)Show     5)Back\n";
         std::cin >> choice;
         while (std::cin.fail()) {
             std::cout << "Enter number\n";
@@ -315,15 +320,12 @@ void Manager::calculateMatricesMenu() {
             _matrices->multiplyMatrices(_cpu, _gpu, _timeMeasure);
             break;
 
-        case 4:
-            _matrices->invertMatrices(_cpu, _gpu, _timeMeasure);
-            break;
 
-        case 5:
+        case 4:
             showMenu();
             break;
 
-        case 6:
+        case 5:
             stay = false;
             break;
 
@@ -347,14 +349,18 @@ mWorkspace* Manager::matrices() const {
 
 
 Manager::Manager(bool CPU, bool GPU, bool timeMeasure,  int numbVectors, int numbMatrices ):
-    _vectors(new vWorkspace(numbVectors)),
-	_matrices(new mWorkspace(numbMatrices)),
+    _GPU(new Gpu()),
 	_cpu(CPU),
 	_gpu(GPU),
-    _timeMeasure(timeMeasure) {}
+    _timeMeasure(timeMeasure) {
+
+    _vectors = new vWorkspace(numbVectors, _GPU);
+    _matrices= new mWorkspace(numbMatrices, _GPU);
+}
 
 
 Manager::~Manager() {
 	delete _vectors;
 	delete _matrices;
+    delete _GPU;
 }

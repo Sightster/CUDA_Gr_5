@@ -80,7 +80,10 @@ void Vector::show() const {
 Vector::Vector(const int size) :
 	_size(size),
 	_ptr(new int[size])
-	{}
+{
+	for (int i = 0; i < _size; i++)
+		_ptr[i] = 1;
+}
 
 Vector::Vector(const Vector& source) {
 	_size = source._size;

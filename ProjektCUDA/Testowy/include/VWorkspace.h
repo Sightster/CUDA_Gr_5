@@ -1,5 +1,6 @@
 #pragma once 
 #include "Manager.h"
+#include "Gpu.h"
 #include <iostream>
 
 
@@ -7,10 +8,11 @@ class Manager;
 
 //workspace is a table of pointers to vectors 
 class vWorkspace {
-	friend class Manager;
+	
 private:
 	int _size;
 	Vector** _ptr; //pointer to workspace
+	Gpu* _GPU;
 
 public:
 	Vector* createVector();
@@ -24,7 +26,7 @@ public:
 	void show() const;
 	/*Print brief information about actual workspace state*/
 
-	vWorkspace(int size = 10);
+	vWorkspace(int size, Gpu*);
 	/*Create empty workspace for vectors*/
 
 	void printVector() const;
@@ -39,6 +41,7 @@ public:
 	void addVectors(bool cpu, bool gpu, bool timeMeasure) const;
 	void substractVectors(bool cpu, bool gpu, bool timeMeasure) const;
 	void dotProductVectors(bool cpu, bool gpu, bool timeMeasure) const;
+
 
 	~vWorkspace();
 };

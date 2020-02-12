@@ -1,5 +1,6 @@
 #pragma once 
 #include "Manager.h"
+#include "Gpu.h"
 #include <iostream>
 
 
@@ -7,10 +8,11 @@ class Manager;
 
 //workspace is a table of pointers to matrices
 class mWorkspace {
-	friend class Manager;
+	
 private:
 	int _size;
 	Matrix** _ptr; //pointer to workplace
+	Gpu* _GPU;
 public:
 	Matrix* createMatrix();
 	/*Try to create new matrix on given position in workspace*/
@@ -23,7 +25,7 @@ public:
 	void show() const;
 	/*Print brief information about actual workspace state*/
 
-	mWorkspace(int size = 10);
+	mWorkspace(int size, Gpu*);
 	/*Create empty worspace for matrices*/
 
 	void intInput(int* input)const;

@@ -52,6 +52,7 @@ Matrix* mWorkspace::createMatrix() {
 		std::cout << "Memory alocation failed\n";
 	else
 		std::cout << "New matrix created successfully\n";
+	_ptr[position]->fill(1, 5);
 	return _ptr[position];
 }
 
@@ -177,24 +178,41 @@ void mWorkspace::addMatrices(bool cpu, bool gpu, bool timeMeasure) const {
 	}
 
 	if (cpu) {
+		StopWatchInterface* timer;
 		if (timeMeasure) {
-
+			printf("Cpu computing...\n");
+			timer = startTimer();
 		}
 		_ptr[position3] = new Matrix(_ptr[position2]->getRow(), _ptr[position1]->getCol());
 		*_ptr[position3] = *_ptr[position1] + *_ptr[position2];
 		if (timeMeasure) {
-
+			printf("Computing ended\n");
+			stopTimer(timer);
+			putchar('\n');
 		}
 	}
 
 	if (gpu) {
+		StopWatchInterface* timer;
 		if (timeMeasure) {
-
+			printf("Gpu computing...\n");
+			timer = startTimer();
 		}
-
+		_ptr[position4] = new Matrix(_ptr[position2]->getRow(), _ptr[position1]->getCol());
+		addGpu(_GPU, _ptr[position1]->getPtr(), _ptr[position2]->getPtr(), _ptr[position4]->getPtr(),
+			_ptr[position1]->getRow() * _ptr[position1]->getCol());
 		if (timeMeasure) {
-
+			printf("Computing ended\n");
+			stopTimer(timer);
+			putchar('\n');
 		}
+	}
+
+	if (gpu && cpu) {
+		if (*_ptr[position4] == *_ptr[position3])
+			printf("Results match!\n");
+		else
+			printf("Results does not match!\n");
 	}
 }
 
@@ -236,24 +254,41 @@ void mWorkspace::substractMatrices(bool cpu, bool gpu, bool timeMeasure) const {
 	}
 
 	if (cpu) {
+		StopWatchInterface* timer;
 		if (timeMeasure) {
-
+			printf("Cpu computing...\n");
+			timer = startTimer();
 		}
 		_ptr[position3] = new Matrix(_ptr[position2]->getRow(), _ptr[position1]->getCol());
 		*_ptr[position3] = *_ptr[position1] - *_ptr[position2];
 		if (timeMeasure) {
-
+			printf("Computing ended\n");
+			stopTimer(timer);
+			putchar('\n');
 		}
 	}
 
 	if (gpu) {
+		StopWatchInterface* timer;
 		if (timeMeasure) {
-
+			printf("Gpu computing...\n");
+			timer = startTimer();
 		}
-
+		_ptr[position4] = new Matrix(_ptr[position2]->getRow(), _ptr[position1]->getCol());
+		subGpu(_GPU, _ptr[position1]->getPtr(), _ptr[position2]->getPtr(), _ptr[position4]->getPtr(),
+			_ptr[position1]->getRow() * _ptr[position1]->getCol());
 		if (timeMeasure) {
-
+			printf("Computing ended\n");
+			stopTimer(timer);
+			putchar('\n');
 		}
+	}
+
+	if (gpu && cpu) {
+		if (*_ptr[position4] == *_ptr[position3])
+			printf("Results match!\n");
+		else
+			printf("Results does not match!\n");
 	}
 }
 
@@ -296,24 +331,41 @@ void mWorkspace::multiplyMatrices(bool cpu, bool gpu, bool timeMeasure) const {
 	}
 
 	if (cpu) {
+		StopWatchInterface* timer;
 		if (timeMeasure) {
-
+			printf("Cpu computing...\n");
+			timer = startTimer();
 		}
 		_ptr[position3] = new Matrix(_ptr[position1]->getCol(), _ptr[position2]->getRow());
 		*_ptr[position3] = *_ptr[position1] * *_ptr[position2];
 		if (timeMeasure) {
-
+			printf("Computing ended\n");
+			stopTimer(timer);
+			putchar('\n');
 		}
 	}
 
 	if (gpu) {
+		StopWatchInterface* timer;
 		if (timeMeasure) {
-
+			printf("Cpu computing...\n");
+			timer = startTimer();
 		}
-
+		_ptr[position4] = new Matrix(_ptr[position1]->getRow(), _ptr[position2]->getCol());
+		mulGpu(_GPU, _ptr[position1]->getPtr(), _ptr[position2]->getPtr(), _ptr[position4]->getPtr(),
+			_ptr[position1]->getRow(), _ptr[position1]->getCol(), _ptr[position2]->getCol());
 		if (timeMeasure) {
-
+			printf("Computing ended\n");
+			stopTimer(timer);
+			putchar('\n');
 		}
+	}
+
+	if (gpu && cpu) {
+		if (*_ptr[position4] == *_ptr[position3])
+			printf("Results match!\n");
+		else
+			printf("Results does not match!\n");
 	}
 }
 
@@ -321,9 +373,10 @@ void mWorkspace::invertMatrices(bool cpu, bool gpu, bool timeMeasure) const {
 
 }
 
-mWorkspace::mWorkspace(int size) :
+mWorkspace::mWorkspace(int size, Gpu* gpu) :
 	_size(size),
-	_ptr(new Matrix* [size])
+	_ptr(new Matrix* [size]),
+	_GPU(gpu)
 {
 	for (int i = 0; i < size; i++) {
 		_ptr[i] = nullptr;

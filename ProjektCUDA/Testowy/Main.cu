@@ -8,14 +8,14 @@ int main(int argc, int argv)
 {
     bool cpu, gpu, timeMeasure;
     cpu = true;
-    gpu = false;
-    timeMeasure = false;
+    gpu = true;
+    timeMeasure = true;
     int vectors, matrices;
     vectors = matrices = 5;
 
-    std::cout << "Current program configuration!:\n";
+    std::cout << "Current program configuration:\n";
     std::cout << "CPU: " << (cpu ? "ON" : "OFF") << " | GPU: " << (gpu ? "ON" : "OFF")
-        << " | Time measure: " << (timeMeasure ? "ON" : "OFF\n");
+        << " | Time measure: " << (timeMeasure ? "ON\n" : "OFF\n");
     std::cout << "Workspaces size Vectors: " << vectors << " Matrices: " << matrices << '\n';
 
     bool conf;

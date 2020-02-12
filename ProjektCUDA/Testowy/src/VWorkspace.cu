@@ -168,30 +168,46 @@ void vWorkspace::addVectors(bool cpu, bool gpu, bool timeMeasure) const {
 	}
 	
 	if (cpu) {
+		StopWatchInterface* timer;
 		if (timeMeasure) {
-
+			printf("Cpu computing...\n");
+			timer = startTimer();
 		}
 		_ptr[position3] = new Vector(_ptr[position2]->getSize());
 		*_ptr[position3] = *_ptr[position1] + *_ptr[position2];
 		if (timeMeasure) {
-
+			printf("Computing ended\n");
+			stopTimer(timer);
+			putchar('\n');
 		}
 	}
 	
 	if (gpu) {
+		StopWatchInterface* timer;
 		if (timeMeasure) {
-
+			printf("Gpu computing...\n");
+			timer = startTimer();
 		}
-
+		_ptr[position4] = new Vector(_ptr[position2]->getSize());
+		addGpu(_GPU ,_ptr[position1]->getPtr(), _ptr[position2]->getPtr(), _ptr[position4]->getPtr(), _ptr[position1]->getSize());
 		if (timeMeasure) {
-
+			printf("Computing ended\n");
+			stopTimer(timer);
+			putchar('\n');
 		}
+	}
+
+	if (gpu && cpu) {
+		if (*_ptr[position4] == *_ptr[position3])
+			printf("Results match!\n");
+		else
+			printf("Results does not match!\n");
 	}
 }
 
 void vWorkspace::substractVectors(bool cpu, bool gpu, bool timeMeasure) const {
 	int position1, position2, position3, position4;
-	std::cout << "Which vector do you want to aubstract: ";
+	std::cout << "Which vector do you want to substract: ";
 	if (!inputPosition(&position1))
 		return;
 
@@ -227,25 +243,41 @@ void vWorkspace::substractVectors(bool cpu, bool gpu, bool timeMeasure) const {
 	}
 	
 	if (cpu) {
+		StopWatchInterface* timer;
 		if (timeMeasure) {
-
+			printf("Cpu computing...\n");
+			timer = startTimer();
 		}
 		_ptr[position3] = new Vector(_ptr[position2]->getSize());
 		*_ptr[position3] = *_ptr[position1] - *_ptr[position2];
 		if (timeMeasure) {
-
+			printf("Computing ended\n");
+			stopTimer(timer);
+			putchar('\n');
 		}
 	}
 	
 	if (gpu) {
+		StopWatchInterface* timer;
 		if (timeMeasure) {
-
+			printf("Gpu computing...\n");
+			timer = startTimer();
+		}
+		_ptr[position4] = new Vector(_ptr[position2]->getSize());
+		subGpu(_GPU, _ptr[position1]->getPtr(), _ptr[position2]->getPtr(), _ptr[position4]->getPtr(), _ptr[position1]->getSize());
+		if (timeMeasure) {
+			printf("Computing ended\n");
+			stopTimer(timer);
+			putchar('\n');
 		}
 
-		if (timeMeasure) {
+	}
 
-		}
-
+	if (gpu && cpu) {
+		if (*_ptr[position4] == *_ptr[position3])
+			printf("Results match!\n");
+		else
+			printf("Results does not match!\n");
 	}
 }
 
@@ -260,30 +292,40 @@ void vWorkspace::dotProductVectors(bool cpu, bool gpu, bool timeMeasure) const {
 		return;
 
 	if (cpu) {
+		StopWatchInterface* timer;
 		if (timeMeasure) {
-
+			printf("Cpu computing...\n");
+			timer = startTimer();
 		}
-		std::cout << "Dot product = "<< *_ptr[position1] * *_ptr[position2];
+		std::cout << "Dot product = "<< *_ptr[position1] * *_ptr[position2] <<std::endl;
 		if (timeMeasure) {
-
+			printf("Computing ended\n");
+			stopTimer(timer);
+			putchar('\n');
 		}
 	}
 
 	if (gpu) {
+		StopWatchInterface* timer;
 		if (timeMeasure) {
-
+			printf("Gpu computing...\n");
+			timer = startTimer();
 		}
-		//std::cout << "Dot product = " << *_ptr[position1] * *_ptr[position2];
+		std::cout << "Dot product = " << dotGpu(_GPU, _ptr[position1]->getPtr(), _ptr[position2]->getPtr(), _ptr[position1]->getSize())
+			<<std::endl;
 		if (timeMeasure) {
-
+			printf("Computing ended\n");
+			stopTimer(timer);
+			putchar('\n');
 		}
 	}
 	
 }
 
-vWorkspace::vWorkspace(int size):
+vWorkspace::vWorkspace(int size, Gpu* gpu):
 	_size(size),
-	_ptr(new Vector*[size])
+	_ptr(new Vector*[size]),
+	_GPU(gpu)
 	{
 	for (int i = 0; i < size; i++) {
 		_ptr[i] = nullptr;
